@@ -1,7 +1,7 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments/common :: head">
+<head th:replace="~{fragments/common :: head}">
 </head>
 
 <body>
@@ -14,6 +14,30 @@
     <main class="container">
         <div class="bg-body-tertiary p-5 rounded">
             <h2>게시판</h2>
+            <div>
+                총 건수: <span th:text="${#lists.size(boards)}">2</span><!--타임리프 텍스트가 2를 덮어쓴다. -->
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">번호</th>
+                        <th scope="col">제목</th>
+                        <th scope="col">내용</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="board : ${boards}">
+                        <td th:text="${board.id}">Mark</td>
+                        <!-- <td th:text="${board.title}">Otto</td> -->
+                        <td><a th:text="${board.title}" th:href="@{/board/form(id=${board.id})}">Otto</a></td>
+                        <td th:text="${board.content}">@mdo</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="text-end">
+                <!-- <button type="button" class="btn btn-primary" th:href="@{/board/form}">쓰기</button> -->
+                <a type="button" class="btn btn-primary" th:href="@{/board/form}">글쓰기</a>
+            </p>
         </div>
     </main>
 
