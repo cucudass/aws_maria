@@ -2,16 +2,17 @@ package com.boot.board_240718.controller;
 
 import com.boot.board_240718.model.Board;
 import com.boot.board_240718.repository.BoardRepository;
+import com.boot.board_240718.validator.BoardValidator;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -21,11 +22,23 @@ public class BoardController {
     @Autowired
     private BoardRepository boardRepository;
 
-    @GetMapping("/list")
-    public String list(Model model) {
-        List<Board> boards = boardRepository.findAll();
-        model.addAttribute("boards", boards);
+    @Autowired
+    private BoardValidator boardValidator;
 
+    @GetMapping("/list")
+    public String list(Model model, @PageableDefault(size = 2) Pageable pageable, @RequestParam(required = false, defaultValue = "") String searchText) {
+        log.info("@# list()");
+        //List<Board> boards = boardRepository.findAll();
+        Page<Board> boards = boardRepository.findByTitleContainingOrContent(searchText, searchText, pageable);
+        log.info("@# boards => " + boards);
+
+        int startPage = Math.max(1, boards.getPageable().getPageNumber() - 4); //현재 페이지 => 5개 이전 페이지 표시 + 5개 이후 페이지 표시
+        int endPage = Math.min(boards.getTotalPages(), boards.getPageable().getPageNumber() + 4);
+
+        //boards.getTotalElements();
+        model.addAttribute("boards", boards);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         return "board/list";
     }
 
@@ -49,6 +62,8 @@ public class BoardController {
     @PostMapping("/form")
     //public String greetingSubmit(@ModelAttribute Board board, Model model) {
     public String checkPersonInfo(@Valid Board board, BindingResult bindingResult) {
+        boardValidator.validate(board, bindingResult);
+
         if (bindingResult.hasErrors()) {
             return "board/form";
         }
