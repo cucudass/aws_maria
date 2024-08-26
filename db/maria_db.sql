@@ -30,7 +30,20 @@ CREATE TABLE IF NOT EXISTS `board` (
   CONSTRAINT `fk_board_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='게시판';
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 sola.board:~12 rows (대략적) 내보내기
+INSERT IGNORE INTO `board` (`id`, `user_id`, `title`, `content`) VALUES
+	(1, 7, '제목12', '내용12'),
+	(5, 7, '제목5', '내용33123'),
+	(6, 7, 'bbbb', '123123'),
+	(7, 7, 'ccc', '123123'),
+	(8, 7, 'ㅇㅇㅇ', 'ㅇㅅㅇ'),
+	(9, 7, 'ㅇㅇㅇ', 'ㄷㅈㄷㄱ'),
+	(10, 7, 'ㅁㄴㅇㄹ', 'ㄴㅇㄹ'),
+	(11, 7, 'ㅁㄴㅇ', 'ㄹㄷㄴ'),
+	(12, 7, '제목2', '내용2'),
+	(15, 7, 'asdf', 'sdf'),
+	(24, 7, 'dddddd', 'qqqqqq'),
+	(25, 9, 'ccc', '11111');
 
 -- 테이블 sola.role 구조 내보내기
 CREATE TABLE IF NOT EXISTS `role` (
@@ -39,7 +52,10 @@ CREATE TABLE IF NOT EXISTS `role` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 sola.role:~2 rows (대략적) 내보내기
+INSERT IGNORE INTO `role` (`id`, `name`) VALUES
+	(1, 'ROLE_USER'),
+	(2, 'ROLE_ADMIN');
 
 -- 테이블 sola.user 구조 내보내기
 CREATE TABLE IF NOT EXISTS `user` (
@@ -51,7 +67,11 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 sola.user:~3 rows (대략적) 내보내기
+INSERT IGNORE INTO `user` (`id`, `username`, `password`, `enabled`) VALUES
+	(7, 'aaa', '$2a$10$Wx3pjCSZquzOnkmA8z46Wei2NkDuhozyGFyk5TiGQLc/5zpbdoBZq', b'1'),
+	(8, 'bbb', '$2a$10$yva8HmFpKkRukwNPQKcdRO9KMOiNBdoaybULl8dM9ouwTxtYaGy8i', b'1'),
+	(9, 'ccc', '$2a$10$hvcK/4X.oIg8le6iKagt1.rC4j0lbD60tDaukVm7iT0eZFXhOqtGO', b'1');
 
 -- 테이블 sola.user_role 구조 내보내기
 CREATE TABLE IF NOT EXISTS `user_role` (
@@ -63,7 +83,12 @@ CREATE TABLE IF NOT EXISTS `user_role` (
   CONSTRAINT `fk_user_role_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 내보낼 데이터가 선택되어 있지 않습니다.
+-- 테이블 데이터 sola.user_role:~4 rows (대략적) 내보내기
+INSERT IGNORE INTO `user_role` (`user_id`, `role_id`) VALUES
+	(7, 1),
+	(8, 1),
+	(9, 1),
+	(7, 2);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
