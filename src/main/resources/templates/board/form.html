@@ -32,12 +32,27 @@
                 </div>
                 <div class="text-end">
                     <button type="submit" class="btn btn-primary">확인</button>
+                    <button type="button" class="btn btn-primary" th:onclick="|deleteBoard(*{id})|" sec:authorize="hasRole('ROLE_ADMIN')">삭제</button>
                     <a type="reset" class="btn btn-primary" th:href="@{/board/list}">취소</a>
                 </div>
             </div>
         </form>
     </main>
-
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        function deleteBoard(id) {
+            //alert("id: "+id);
+            $.ajax({
+                url: '/api/boards/'+id,
+                type: 'DELETE',
+                success: function(result) {
+                    alert("삭제됐습니다.");
+                    location.href = "/board/list";
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>
+

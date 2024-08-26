@@ -1,15 +1,18 @@
 package com.boot.board_240718.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+//Entity가 다른 Entity와 연관관계가 있는 상태에서 둘 다 @Data 어노테이션이 붙어있을 경우
+//Lombok에서 생성하는 equals, hashCode 혹은 toString() 메서드가 서로를 순환 참조하는 문제가 발생
+//@Data
+@Getter
+@Setter
 public class Board {
 
     @Id
@@ -20,4 +23,8 @@ public class Board {
     private String title;
     @NotNull
     private String content;
+
+    @OneToOne
+    @JoinColumn(name="user_id")
+    private User user;
 }

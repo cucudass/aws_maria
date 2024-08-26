@@ -2,6 +2,7 @@ package com.boot.board_240718.controller;
 
 import com.boot.board_240718.model.Board;
 import com.boot.board_240718.repository.BoardRepository;
+import com.boot.board_240718.service.BoardService;
 import com.boot.board_240718.validator.BoardValidator;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +27,9 @@ public class BoardController {
 
     @Autowired
     private BoardValidator boardValidator;
+
+    @Autowired
+    private BoardService boardService;
 
     @GetMapping("/list")
     public String list(Model model, @PageableDefault(size = 2) Pageable pageable, @RequestParam(required = false, defaultValue = "") String searchText) {
@@ -60,15 +66,20 @@ public class BoardController {
     }
 
     @PostMapping("/form")
-    //public String greetingSubmit(@ModelAttribute Board board, Model model) {
-    public String checkPersonInfo(@Valid Board board, BindingResult bindingResult) {
+    //public String form(@ModelAttribute Board board, Model model) {
+    public String form(@Valid Board board, BindingResult bindingResult) {
+        //서버단에서 validation 체크
         boardValidator.validate(board, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return "board/form";
         }
 
-        boardRepository.save(board);
+        //boardRepository.save(board);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        
+        boardService.save(username, board);
 
         return "redirect:/board/list";
     }
